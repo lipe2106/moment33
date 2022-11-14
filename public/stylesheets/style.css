@@ -1,0 +1,27 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#container {
+  width: 60%;
+  margin: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  padding-bottom: 1%;
+}
+
+.period {
+  text-align: center;
+}
+
+img {
+  max-height: 20px;
+  margin-left: 20%;
+}
