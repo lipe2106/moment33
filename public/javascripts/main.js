@@ -5,7 +5,7 @@ let url = "http://localhost:3000/courses/";
 window.onload = init();
 
 function init() {
-    // Read and publish all courses 
+    // Get courses from api and publish all 
     fetch(url, {
         method: 'GET'
     })
@@ -15,7 +15,7 @@ function init() {
         let result = "<tr>";
         for(let i=0; i < jsonData.length; i++){
             result += "<td>"+jsonData[i]._id + "</td><td>"+jsonData[i].courseId + "</td><td>"+jsonData[i].courseName +
-            "</td><td class='period'>"+jsonData[i].coursePeriod +"</td><td><img src='images/bin.png' alt='Delete course' title='Radera kurs' id=" + jsonData[i]._id + " /></td></tr>";    
+            "</td><td class='period'>"+jsonData[i].coursePeriod +"</td><td><img src='images/bin.png' alt='Delete course' title='Radera kurs " + jsonData[i]._id + "' id=" + jsonData[i]._id + " /></td></tr>";    
         }
         
         if(jsonData.length > 0) {
@@ -25,10 +25,10 @@ function init() {
         }
     })
     .catch(error => {
-    alert('There was an error ' + error);
+    alert('Error: ' + error);
     });
 
-    // Create event handler for delete user
+    // Create event handler to delete course
     document.getElementById("result").addEventListener("click", function(e){
         let id = e.target.id;
         fetch(url + id, {
@@ -39,8 +39,8 @@ function init() {
             location.reload();
             })
         .catch(error => {
-            alert('There was an error '+error);
+            alert('Error: '+ error);
         });
     });
 
-}; // End of DOM content loaded 
+}; 

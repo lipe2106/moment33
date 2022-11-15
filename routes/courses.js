@@ -29,11 +29,13 @@ router.get('/:id', function(req, res, next) {
 
   // Find the array index that holds _id = id
   for(var i=0; i < courses.length; i++) {
-    if(courses[i]._id == id) ind = i; 
+    if(courses[i]._id == id) {
+      ind = i; 
+    }
   }
 
   res.contentType('application/json');
-  res.send(ind>=0?courses[ind]:"Kursen kunde inte hittas"); // If course is found return coure object else error message
+  res.send(ind>=0?courses[ind]:"Kursen kunde inte hittas"); // If course is found return course object else error message
 });
 
 /* Delete specific course */
@@ -42,12 +44,14 @@ router.delete('/:id', function(req, res, next) {
   var del=-1;
 
   // Find the array index that holds _id = id
-  for(var i=0; i < courses.length; i++){
+  for(var i=0; i < courses.length; i++) {
     if(courses[i]._id == id) del = i; 
   }
 
   // Delete element and fix array
-  if(del>=0) courses.splice(del, 1); 
+  if(del>=0) {
+    courses.splice(del, 1); 
+  }
   
   res.contentType('application/json');
   res.send("Kursen med id " + id + " är nu raderad"); // Return message 
