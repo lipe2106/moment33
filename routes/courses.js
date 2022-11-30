@@ -3,60 +3,85 @@
 var express = require('express');
 var router = express.Router();
 
-// Save courses in array
-var courses = [
-{"_id":1,"courseId":"DT162G","courseName":"Javascript-baserad webbutveckling","coursePeriod":1},
-{"_id":2,"courseId":"IK060G","courseName":"Projektledning","coursePeriod":1},
-{"_id":3,"courseId":"DT071G","courseName":"Programmering i C#.NET","coursePeriod":2},
-{"_id":4,"courseId":"DT148G","courseName":"Webbutveckling för mobila enheter","coursePeriod":2},
-{"_id":5,"courseId":"DT102G","courseName":"ASP.NET med C#","coursePeriod":3},
-{"_id":6,"courseId":"IG021G","courseName":"Affärsplaner och kommersialisering","coursePeriod":3},
-{"_id":7,"courseId":"DT069G","courseName":"Multimedia för webben","coursePeriod":4},
-{"_id":8,"courseId":"DT080G","courseName":"Självständigt arbete","coursePeriod":4}
-];
+const bodyParser = require('body-parser');
+router.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+)
+router.use(bodyParser.json());
 
-/* GET courses */
-router.get('/', function(req, res, next) {
+// Database connection
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/myCV', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.Promise = global.Promise; // Global use of mongoose
 
-  var jsonObj = JSON.stringify(courses);
-  res.contentType('application/json');
-  res.send(jsonObj);
-});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console,'connection error:'));
+db.once('open', function (callback) { // Add the listener for db events 
+  console.log("Connected to db");
 
-/* Get specific course by id*/
-router.get('/:id', function(req, res, next) {
+  // Create db scheme
+  var courseScheme = mongoose.Schema({
+    code: String,
+    name: String,
+    syllabus: String,
+    progression: String,
+    term: String
+  });
 
-  var id = req.params.id;
-  var ind = -1;
+  // Create scheme model
+  var Course = mongoose.model('Course', courseScheme)
 
-  // Find the array index that holds _id = id
-  for(var i=0; i < courses.length; i++) {
-    if(courses[i]._id == id) {
-      ind = i; 
+
+  /* GET courses */
+  router.get('/', function(req, res, next) {
+
+    // Get courses from database
+    Course.find(function(err, courses) {
+      if(err) return console.error(err);
+      var jsonObj = JSON.stringify(courses);
+      res.contentType('application/json');
+      res.send(jsonObj);
+    });
+  });
+
+  /* Get specific course by id
+  router.get('/:id', function(req, res, next) {
+
+    var id = req.params.id;
+    var ind = -1;
+
+    // Find the array index that holds _id = id
+    for(var i=0; i < courses.length; i++) {
+      if(courses[i]._id == id) {
+        ind = i; 
+      }
     }
-  }
 
-  res.contentType('application/json');
-  res.send(ind>=0?courses[ind]:"Kursen kunde inte hittas"); // If course is found return course object else error message
-});
+    res.contentType('application/json');
+    res.send(ind>=0?courses[ind]:"Kursen kunde inte hittas"); // If course is found return course object else error message
+  });*/
 
-/* Delete specific course */
-router.delete('/:id', function(req, res, next) {
-  var id = req.params.id;
-  var del=-1;
+  /* Delete specific course */
+  router.delete('/:id', function(req, res, next) {
+    var id = req.params.id;
 
-  // Find the array index that holds _id = id
-  for(var i=0; i < courses.length; i++) {
-    if(courses[i]._id == id) del = i; 
-  }
+    // Delete course with _id from db
+    Course.deleteOne({ "_id": id }, function (err) {
+      if (err) return handleError(err);
+    });
 
-  // Delete element and fix array
-  if(del>=0) {
-    courses.splice(del, 1); 
-  }
+    // Get new course list as response
+    Course.find(function(err, courses) {
+      if(err) return console.error(err);
   
-  res.contentType('application/json');
-  res.send("Kursen med id " + id + " är nu raderad"); // Return message 
-});
+      var jsonObj = JSON.stringify(courses);
+      res.contentType('application/json');
+      res.send(jsonObj);
+    });
+  });
+
+}); // DB connection
   
 module.exports = router;
