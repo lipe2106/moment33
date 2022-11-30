@@ -1,6 +1,6 @@
 "use strict";
 
-let url = "http://localhost:3000/courses";
+let url = "http://localhost:3000/courses/";
 
 window.onload = init();
 
@@ -17,7 +17,7 @@ function init() {
             result += "</td><td>"+jsonData[i].code + "</td><td>" + jsonData[i].name +
             "</td><td><a href='" + jsonData[i].syllabus + "'>Länk</td><td>"+jsonData[i].progression + "</td><td class='period'>" + 
             jsonData[i].term + "</td><td><img src='images/bin.png' alt='Delete course' title='Radera kurs " + 
-            jsonData[i]._id + "' id=" + jsonData[i]._id + " /></td></tr>";    
+            jsonData[i].code + "' id=" + jsonData[i]._id + " /></td></tr>";    
         }
         
         if(jsonData.length > 0) {
