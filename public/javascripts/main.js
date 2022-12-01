@@ -51,22 +51,25 @@ function init() {
         course.courseName = document.getElementById("courseName").value;
         course.coursePeriod = document.getElementById("coursePeriod").value;
 
-        if(course.courseId == "" || course.courseName == "" || course.coursePeriod == "") return;
-
-        fetch(url, {
-            method: 'POST', 
-            body: JSON.stringify(course), 	
-            headers: { 
-                'Content-type': 'application/json; charset=UTF-8'
-            } 
-        })
-        .then(response => response.text())
-            .then(data => {
-                location.reload();
-             })
-        .catch(error => {
-            alert('There was an error ' + error);
-        });
+        if(course.courseId == "" || course.courseName == "" || course.coursePeriod == "") {
+            document.getElementById("message").innerHTML = "Du måste fylla i alla fält korrekt";
+            e.preventDefault();
+        } else {
+            fetch(url, {
+                method: 'POST', 
+                body: JSON.stringify(course), 	
+                headers: { 
+                    'Content-type': 'application/json; charset=UTF-8'
+                } 
+            })
+            .then(response => response.text())
+                .then(data => {
+                    location.reload();
+                })
+            .catch(error => {
+                alert('There was an error ' + error);
+            });
+        }
     })
 
 }; 
