@@ -13,11 +13,10 @@ function init() {
     .then(data => {
         let jsonData = JSON.parse(data);
         let result = "<tr>";
-        for(let i=0; i < jsonData.length; i++){
-            result += "</td><td>"+jsonData[i].code + "</td><td>" + jsonData[i].name +
-            "</td><td><a href='" + jsonData[i].syllabus + "'>Länk</td><td>"+jsonData[i].progression + "</td><td class='period'>" + 
-            jsonData[i].term + "</td><td><img src='images/bin.png' alt='Delete course' title='Radera kurs " + 
-            jsonData[i].code + "' id=" + jsonData[i]._id + " /></td></tr>";    
+        for(let i=0; i < jsonData.length; i++) {
+            result += "<td>" + jsonData[i].courseId + "</td><td>" + jsonData[i].courseName +
+            "</td><td class='period'>"+jsonData[i].coursePeriod + "</td><td><img src='images/bin.png' alt='Delete course' title='Radera kurs "
+            + jsonData[i].courseId + "' id=" + jsonData[i]._id + " /></td></tr>";    
         }
         
         if(jsonData.length > 0) {
@@ -44,5 +43,30 @@ function init() {
             alert('Error: '+ error);
         });
     });
+
+    // Create event handler to add course
+    document.getElementById("add").addEventListener("click", function(e){
+        let course = {};
+	    course.courseId = document.getElementById("courseId").value;
+        course.courseName = document.getElementById("courseName").value;
+        course.coursePeriod = document.getElementById("coursePeriod").value;
+
+        if(course.courseId == "" || course.courseName == "" || course.coursePeriod == "") return;
+
+        fetch(url, {
+            method: 'POST', 
+            body: JSON.stringify(course), 	
+            headers: { 
+                'Content-type': 'application/json; charset=UTF-8'
+            } 
+        })
+        .then(response => response.text())
+            .then(data => {
+                location.reload();
+             })
+        .catch(error => {
+            alert('There was an error ' + error);
+        });
+    })
 
 }; 

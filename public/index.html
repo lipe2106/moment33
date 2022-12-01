@@ -10,18 +10,28 @@
 </head>
 <body>
     <div id="container">
-        <h1>Kurser jag läst</h1>
-        <p>Nedan listas kurser jag hittills läst på programmet Webbutveckling, Mittuniversitetet.</p>
+        <h1>Kurser år 2</h1>
+        <p>Nedan listas kurser som läses under år 2 på programmet Webbutveckling, Mittuniversitetet.</p>
         <table>
             <thead>
                 <th>Kurskod:</th>
                 <th>Kursnamn:</th>
-                <th>Kursplan:</th>
-                <th>Progression:</th>
-                <th>Termin:</th>
+                <th>Period:</th>
             </thead>
             <tbody id="result"></tbody>
         </table>
+        <form>
+            <h2>Lägg till kurs</h2>
+            <label for="courseName">Kursnamn:</label>
+            <input type="text" id="courseName" />
+            <br /><br />
+            <label for="courseId">Kurskod:</label>
+            <input type="text" id="courseId" />
+            <label for="coursePeriod">Period:</label>
+            <input type="text" id="coursePeriod" />
+            <br /><br />
+            <input type="submit" value="Lägg till" id="add" />
+        </form>
         <footer>
             <p>&copy; Lina Petersson</p>
         </footer>

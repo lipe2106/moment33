@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 
 // Database connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/myCV', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://127.0.0.1:27017/moment33', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise; // Global use of mongoose
 
 var db = mongoose.connection;
@@ -23,11 +23,9 @@ db.once('open', function (callback) { // Add the listener for db events
 
   // Create db scheme
   var courseScheme = mongoose.Schema({
-    code: String,
-    name: String,
-    syllabus: String,
-    progression: String,
-    term: String
+    courseId: String,
+    courseName: String,
+    coursePeriod: String
   });
 
   // Create scheme model
@@ -40,28 +38,28 @@ db.once('open', function (callback) { // Add the listener for db events
     // Get courses from database
     Course.find(function(err, courses) {
       if(err) return console.error(err);
+
       var jsonObj = JSON.stringify(courses);
       res.contentType('application/json');
       res.send(jsonObj);
     });
   });
 
-  /* Get specific course by id
+  /* Get specific course by id */
   router.get('/:id', function(req, res, next) {
 
     var id = req.params.id;
-    var ind = -1;
 
-    // Find the array index that holds _id = id
-    for(var i=0; i < courses.length; i++) {
-      if(courses[i]._id == id) {
-        ind = i; 
-      }
-    }
+    Course.findById(id, function (err, course) {
+      if (err) throw err;
 
-    res.contentType('application/json');
-    res.send(ind>=0?courses[ind]:"Kursen kunde inte hittas"); // If course is found return course object else error message
-  });*/
+      var jsonObj = JSON.stringify(course);
+      res.contentType('application/json');
+      res.send(jsonObj); 
+    });
+
+   
+  });
 
   /* Delete specific course */
   router.delete('/:id', function(req, res, next) {
@@ -81,6 +79,29 @@ db.once('open', function (callback) { // Add the listener for db events
       res.send(jsonObj);
     });
   });
+
+
+  /* Add course */
+  router.post('/', function(req, res, next) {
+
+    // Create a new course
+    var newCourse = new Course({ 
+        courseId: req.body.courseId, 
+        courseName: req.body.courseName,
+        coursePeriod: req.body.coursePeriod
+    });	
+    console.log("test" + req.body.courseName);
+
+    // Save new course to db
+    newCourse.save(function(err) {
+        if(err) return console.error(err);
+    });
+
+    var jsonObj = JSON.stringify(newCourse);
+    res.contentType('application/json');
+    res.send(jsonObj);
+
+});
 
 }); // DB connection
   
