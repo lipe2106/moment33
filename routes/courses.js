@@ -1,7 +1,7 @@
 // Av Lina Petersson
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const bodyParser = require('body-parser');
 router.use(
@@ -12,24 +12,24 @@ router.use(
 router.use(bodyParser.json());
 
 // Database connection
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/moment33', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise; // Global use of mongoose
 
-var db = mongoose.connection;
+let db = mongoose.connection;
 db.on('error', console.error.bind(console,'connection error:'));
 db.once('open', function (callback) { // Add the listener for db events 
   console.log("Connected to db");
 
   // Create db scheme
-  var courseScheme = mongoose.Schema({
+  let courseScheme = mongoose.Schema({
     courseId: String,
     courseName: String,
     coursePeriod: String
   });
 
   // Create scheme model
-  var Course = mongoose.model('Course', courseScheme)
+  let Course = mongoose.model('Course', courseScheme)
 
 
   /* GET courses */
@@ -39,7 +39,7 @@ db.once('open', function (callback) { // Add the listener for db events
     Course.find(function(err, courses) {
       if(err) return console.error(err);
 
-      var jsonObj = JSON.stringify(courses);
+      let jsonObj = JSON.stringify(courses);
       res.contentType('application/json');
       res.send(jsonObj);
     });
@@ -48,22 +48,20 @@ db.once('open', function (callback) { // Add the listener for db events
   /* Get specific course by id */
   router.get('/:id', function(req, res, next) {
 
-    var id = req.params.id;
+    let id = req.params.id;
 
     Course.findById(id, function (err, course) {
       if (err) throw err;
 
-      var jsonObj = JSON.stringify(course);
+      let jsonObj = JSON.stringify(course);
       res.contentType('application/json');
       res.send(jsonObj); 
     });
-
-   
   });
 
   /* Delete specific course */
   router.delete('/:id', function(req, res, next) {
-    var id = req.params.id;
+    let id = req.params.id;
 
     // Delete course with _id from db
     Course.deleteOne({ "_id": id }, function (err) {
@@ -74,34 +72,32 @@ db.once('open', function (callback) { // Add the listener for db events
     Course.find(function(err, courses) {
       if(err) return console.error(err);
   
-      var jsonObj = JSON.stringify(courses);
+      let jsonObj = JSON.stringify(courses);
       res.contentType('application/json');
       res.send(jsonObj);
     });
   });
 
 
-  /* Add course */
+  /* Add course to database*/
   router.post('/', function(req, res, next) {
 
     // Create a new course
-    var newCourse = new Course({ 
+    let newCourse = new Course({ 
         courseId: req.body.courseId, 
         courseName: req.body.courseName,
         coursePeriod: req.body.coursePeriod
     });	
-    console.log("test" + req.body.courseName);
 
     // Save new course to db
     newCourse.save(function(err) {
         if(err) return console.error(err);
     });
 
-    var jsonObj = JSON.stringify(newCourse);
+    let jsonObj = JSON.stringify(newCourse);
     res.contentType('application/json');
     res.send(jsonObj);
-
-});
+  });
 
 }); // DB connection
   

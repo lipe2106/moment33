@@ -1,7 +1,17 @@
 "use strict";
 
+// Save api url in variable
 let url = "http://localhost:3000/courses/";
 
+// Get elements from html and save in variables
+let resultEl = document.getElementById("result");
+let addEl = document.getElementById("add");
+let courseIdEl = document.getElementById("courseId");
+let courseNameEl = document.getElementById("courseName");
+let coursePeriodEl = document.getElementById("coursePeriod");
+let messageEl = document.getElementById("message");
+
+// When window loads call function init
 window.onload = init();
 
 function init() {
@@ -20,9 +30,9 @@ function init() {
         }
         
         if(jsonData.length > 0) {
-            document.getElementById("result").innerHTML = result;
+            resultEl.innerHTML = result;
         } else {
-            document.getElementById("result").innerHTML = "<tr><td colspan='3'>Inga kurser kunde hittas</td></tr>";
+            resultEl.innerHTML = "<tr><td colspan='3'>Inga kurser kunde hittas</td></tr>";
         }
     })
     .catch(error => {
@@ -30,7 +40,7 @@ function init() {
     });
 
     // Create event handler to delete course
-    document.getElementById("result").addEventListener("click", function(e){
+    resultEl.addEventListener("click", function(e){
         let id = e.target.id;
         fetch(url + id, {
             method: 'DELETE'
@@ -44,17 +54,21 @@ function init() {
         });
     });
 
-    // Create event handler to add course
-    document.getElementById("add").addEventListener("click", function(e){
-        let course = {};
-	    course.courseId = document.getElementById("courseId").value;
-        course.courseName = document.getElementById("courseName").value;
-        course.coursePeriod = document.getElementById("coursePeriod").value;
+    // Add event handler to add course when submitting form
+    addEl.addEventListener("click", function(e) {
 
+        // Save input in variables
+        let course = {};
+        course.courseId = courseIdEl.value;
+        course.courseName = courseNameEl.value;
+        course.coursePeriod = coursePeriod.value;
+
+        // If input is empty show error message and prevent button from submit
         if(course.courseId == "" || course.courseName == "" || course.coursePeriod == "") {
-            document.getElementById("message").innerHTML = "Du måste fylla i alla fält korrekt";
+            messageEl.innerHTML = "Du måste fylla i alla fält korrekt";
             e.preventDefault();
         } else {
+            // If input is correct add course to database
             fetch(url, {
                 method: 'POST', 
                 body: JSON.stringify(course), 	
@@ -71,5 +85,4 @@ function init() {
             });
         }
     })
-
-}; 
+}
