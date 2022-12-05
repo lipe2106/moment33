@@ -1,3 +1,5 @@
+// Av Lina Petersson
+
 "use strict";
 
 // Save api url in variable
@@ -45,7 +47,7 @@ function init() {
         fetch(url + id, {
             method: 'DELETE'
         })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
             location.reload();
             })
@@ -76,7 +78,7 @@ function init() {
                     'Content-type': 'application/json; charset=UTF-8'
                 } 
             })
-            .then(response => response.text())
+            .then(response => response.json())
                 .then(data => {
                     location.reload();
                 })

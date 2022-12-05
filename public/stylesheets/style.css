@@ -1,8 +1,11 @@
+/*Av Lina Petersson*/
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1em;
   line-height: 1.4em;
   background-color: rgb(97, 139, 158);
+  width: 100%;
 }
 
 #container {
